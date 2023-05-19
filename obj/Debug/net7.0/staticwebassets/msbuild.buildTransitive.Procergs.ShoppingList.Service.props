@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\Procergs.ShoppingList.Service.props" />
+</Project>
