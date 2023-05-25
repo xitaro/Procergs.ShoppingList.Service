@@ -11,6 +11,7 @@
 using System;
 using System.Reflection;
 
+[assembly: Microsoft.Extensions.Configuration.UserSecrets.UserSecretsIdAttribute("ae2a4063-ca20-46ae-9ea0-a42af1f64c26")]
 [assembly: System.Reflection.AssemblyCompanyAttribute("Procergs.ShoppingList.Service")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]

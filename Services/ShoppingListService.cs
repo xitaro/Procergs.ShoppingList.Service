@@ -23,7 +23,7 @@ namespace Procergs.ShoppingList.Service.Services
 
                 if (shoppingList == null)
                     throw new NullReferenceException("Não encontrou nenhuma lista de compras para este usuário.");
-
+                
                 return shoppingList.AsDto();
             }
             catch (Exception)

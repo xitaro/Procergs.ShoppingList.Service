@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "YZZUYnfoz7VQlnrKZJ9GF2+eNWmusQwZgIacII8I7GSMQ/WfjBsfOW/q+9e8kHf7uHpy+Hft1bJ2cRyKMLz00Q==",
+  "dgSpecHash": "NFkhWYFmUTJBIEFLwRBHZhUpI+IAnWCc4DNcapqTUL7GfJQrrB257e+/Eor4jfZOVQMaFtgHGzEBaQTPNRSugA==",
   "success": true,
   "projectFilePath": "C:\\Users\\Marco\\source\\repos\\xitaro\\Procergs.ShoppingList.Service\\Procergs.ShoppingList.Service.csproj",
   "expectedPackageFiles": [
@@ -12,6 +12,7 @@
     "C:\\Users\\Marco\\.nuget\\packages\\microsoft.extensions.logging.abstractions\\2.0.0\\microsoft.extensions.logging.abstractions.2.0.0.nupkg.sha512",
     "C:\\Users\\Marco\\.nuget\\packages\\microsoft.netcore.platforms\\5.0.0\\microsoft.netcore.platforms.5.0.0.nupkg.sha512",
     "C:\\Users\\Marco\\.nuget\\packages\\microsoft.openapi\\1.4.3\\microsoft.openapi.1.4.3.nupkg.sha512",
+    "C:\\Users\\Marco\\.nuget\\packages\\microsoft.visualstudio.azure.containers.tools.targets\\1.17.2\\microsoft.visualstudio.azure.containers.tools.targets.1.17.2.nupkg.sha512",
     "C:\\Users\\Marco\\.nuget\\packages\\microsoft.win32.registry\\5.0.0\\microsoft.win32.registry.5.0.0.nupkg.sha512",
     "C:\\Users\\Marco\\.nuget\\packages\\mongodb.bson\\2.19.1\\mongodb.bson.2.19.1.nupkg.sha512",
     "C:\\Users\\Marco\\.nuget\\packages\\mongodb.driver\\2.19.1\\mongodb.driver.2.19.1.nupkg.sha512",
