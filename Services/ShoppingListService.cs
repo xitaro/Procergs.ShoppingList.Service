@@ -172,7 +172,7 @@ namespace Procergs.ShoppingList.Service.Services
                 }
 
                 // Grouped by Cnpj
-                GroupedProducts = elasticProductsDto.GroupBy(product => product.Estabelecimento.Cnpj);
+                GroupedProducts = elasticProductsDto.GroupBy(product => product.Estabelecimento.CodCnpjEstab);
 
                 // Verificar qual grupo tem mais elementos // Ordena pelo Count
                 orderedGroups = GroupedProducts.OrderByDescending(group => group.Count());
@@ -183,7 +183,7 @@ namespace Procergs.ShoppingList.Service.Services
                 GroupedProducts = orderedGroups.TakeWhile(group => group.Count() == highScore);
 
                 // Ordena por menor valor e por menor distância
-                orderedGroups = GroupedProducts.OrderBy(group => group.Sum(product => product.VlrItem)).ThenByDescending(g => g.FirstOrDefault().Estabelecimento.MaxDistance);
+                orderedGroups = GroupedProducts.OrderBy(group => group.Sum(product => product.VlrItem)).ThenByDescending(g => g.FirstOrDefault().Estabelecimento.KmDistancia);
 
                 // Pega o primeiro grupo de produtos da lista
                 var products = orderedGroups.FirstOrDefault();
@@ -199,9 +199,9 @@ namespace Procergs.ShoppingList.Service.Services
 
                 BestPlaceDto bestPlace = new BestPlaceDto()
                 {
-                    Name = productInfo.Estabelecimento.Name,
-                    Cnpj = productInfo.Estabelecimento.Cnpj.ToString(),
-                    Distance = productInfo.Estabelecimento.MaxDistance,
+                    Name = productInfo.Estabelecimento.NomeContrib,
+                    Cnpj = productInfo.Estabelecimento.CodCnpjEstab.ToString(),
+                    Distance = productInfo.Estabelecimento.KmDistancia,
                     ProductDtos = productsDto,
                     Amount = amount
                 };
@@ -238,7 +238,7 @@ namespace Procergs.ShoppingList.Service.Services
 
             var request = new Func<SearchDescriptor<ElasticDto>, ISearchRequest>(s => s
                    .From(0)
-                   .Size(200)
+                   .Size(500)
                    .Index("sefaz_mprs_item")
                    .Query(q => q
                         .Bool(b => b
@@ -247,7 +247,7 @@ namespace Procergs.ShoppingList.Service.Services
                                 .GeoDistance(geo => geo
                                     .Distance(new Distance(pesquisaDto.MaxDistance, DistanceUnit.Kilometers))
                                     .Location(new GeoLocation(pesquisaDto.Latitude, pesquisaDto.Longitude))
-                                    .Field(fs => fs.Estabelecimento.Location)
+                                    .Field(fs => fs.Estabelecimento.Localizacao)
                                     ))))
                   .Sort(y => y
                     .Descending(SortSpecialField.Score)
@@ -259,8 +259,8 @@ namespace Procergs.ShoppingList.Service.Services
             // Calcula a distância para cada um dos produtos retornados
             foreach (var item in SearchResponse.Documents)
             {
-                item.Estabelecimento.MaxDistance = GeoCalculator
-                    .CalculateDistance(item.Estabelecimento.Latitude, item.Estabelecimento.Longitude,
+                item.Estabelecimento.KmDistancia = GeoCalculator
+                    .CalculateDistance(item.Estabelecimento.NroLatitude, item.Estabelecimento.NroLongitude,
                                       pesquisaDto.Latitude, pesquisaDto.Longitude, 'K');
 
                 if (item.CodGrupoAnp.HasValue && item.CodGrupoAnp.Value > 0)
@@ -275,7 +275,7 @@ namespace Procergs.ShoppingList.Service.Services
             Func<ElasticDto, Object> campoOrdemComplementar = null;
 
             campoOrdemPrincipal = f => f.VlrItem;
-            campoOrdemComplementar = f => f.Estabelecimento.MaxDistance;
+            campoOrdemComplementar = f => f.Estabelecimento.KmDistancia;
 
 
             IEnumerable<ElasticDto> itens = null;
@@ -284,7 +284,7 @@ namespace Procergs.ShoppingList.Service.Services
             itens = SearchResponse.Documents.OrderByDescending(campoOrdemPrincipal).ThenBy(campoOrdemComplementar);
 
             //Remove os duplicados
-            return itens.GroupBy(item => new { item.TexDesc, item.Estabelecimento.Cnpj }).Select(item => item.First()).Take(200);
+            return itens.GroupBy(item => new { item.TexDesc, item.Estabelecimento.CodCnpjEstab }).Select(item => item.First()).Take(500);
         }
     }
 

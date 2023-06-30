@@ -4,41 +4,44 @@ using ThirdParty.Json.LitJson;
 
 namespace Procergs.ShoppingList.Service.Dtos
 {
+
+    // Esse record está em portugues pois representa o objeto da api do elastic search
+
     [ElasticsearchType(RelationName = "estabelecimento")]
     public record EstabelecimentoDto
     {
         [JsonPropertyName("codCnpjEstab")]
-        public long Cnpj { get; set; }
+        public long CodCnpjEstab { get; set; }
 
         [JsonPropertyName("nomeContrib")]
-        public string Name { get; set; }
+        public string NomeContrib { get; set; }
 
         [JsonPropertyName("nomeLograd")]
-        public string Adress { get; set; }
+        public string NomeLograd { get; set; }
 
         [JsonPropertyName("nroLograd")]
-        public string AdressNumber { get; set; }
+        public string NroLograd { get; set; }
 
         [JsonPropertyName("nomeBairro")]
-        public string District { get; set; }
+        public string NomeBairro { get; set; }
 
         [JsonPropertyName("nomeMunic")]
-        public string City { get; set; }
+        public string NomeMunic { get; set; }
 
         [JsonPropertyName("nroCEP")]
-        public long Cep { get; set; }
+        public long NroCEP { get; set; }
 
         [JsonPropertyName("nroLatitude")]
-        public double Latitude { get; set; }
+        public double NroLatitude { get; set; }
 
         [JsonPropertyName("nroLongitude")]
-        public double Longitude { get; set; }
+        public double NroLongitude { get; set; }
 
         [JsonPropertyName("localizacao")]
         [GeoPoint]
-        public GeoLocation Location { get; set; }
+        public GeoLocation Localizacao { get; set; }
 
         [JsonPropertyName("kmDistancia")]
-        public double MaxDistance { get; set; }
+        public double KmDistancia { get; set; }
     }
 }
