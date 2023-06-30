@@ -1,5 +1,4 @@
 ﻿using MongoDB.Driver;
-using Procergs.ShoppingList.Service.Dtos;
 
 namespace Procergs.ShoppingList.Service.Repositories
 {
@@ -11,15 +10,19 @@ namespace Procergs.ShoppingList.Service.Repositories
         
         public ShoppingListRepository(IMongoDatabase database, string collectionName)
         {
-
             dbCollection = database.GetCollection<Entities.ShoppingList>(collectionName);
-
         }
 
-        public async Task<Entities.ShoppingList> GetByUserIDAsync(Guid userID)
+        public async Task<IReadOnlyCollection<Entities.ShoppingList>> GetAllByUserAsync(Guid userID)
         {
             FilterDefinition<Entities.ShoppingList> filter = filterDefinitionBuilder.Eq(entity => entity.UserID, userID);
-            return await dbCollection.Find(filter).FirstOrDefaultAsync();
+            return await dbCollection.Find(filter).ToListAsync();
+        }
+
+        public async Task<Entities.ShoppingList> GetByIDAsync(Guid id)
+        {
+            FilterDefinition<Entities.ShoppingList> filter = filterDefinitionBuilder.Eq(entity => entity.Id, id);
+            return await dbCollection.Find(filterDefinitionBuilder.Empty).FirstOrDefaultAsync();
         }
 
         public async Task CreateAsync(Entities.ShoppingList entity)
@@ -39,7 +42,7 @@ namespace Procergs.ShoppingList.Service.Repositories
                 throw new ArgumentNullException(nameof(entity));
             }
 
-            FilterDefinition<Entities.ShoppingList> filter = filterDefinitionBuilder.Eq(existingEntity => existingEntity.UserID, entity.UserID);
+            FilterDefinition<Entities.ShoppingList> filter = filterDefinitionBuilder.Eq(existingEntity => existingEntity.Id, entity.Id);
 
             await dbCollection.ReplaceOneAsync(filter, entity);
         }    

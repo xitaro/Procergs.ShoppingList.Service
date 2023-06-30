@@ -1,7 +1,17 @@
-                               using MongoDB.Driver;
+using Elasticsearch.Net;
+using FluentValidation;
+using Microsoft.Extensions.DependencyInjection;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
+using MongoDB.Driver;
+using Nest;
+using Procergs.ShoppingList.Service.Dtos;
+using Procergs.ShoppingList.Service.Extensions;
 using Procergs.ShoppingList.Service.Interfaces;
 using Procergs.ShoppingList.Service.Repositories;
 using Procergs.ShoppingList.Service.Services;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,8 +38,19 @@ builder.Services.AddSingleton<IShoppingListRepository>(serviceProvider =>
     return new ShoppingListRepository(database, builder.Configuration.GetValue<string>("ShoppingListDataBaseSettings:CollectionName"));
 });
 
+BsonSerializer.RegisterSerializer(new GuidSerializer(BsonType.String));
+
+// Elasticsearch
+builder.Services.AddElasticSearch(builder.Configuration);
+
+// Services
 builder.Services.AddSingleton<IShoppingListService, ShoppingListService>();
 builder.Services.AddSingleton<IProductService, ProductService>();
+
+// Validators
+builder.Services.AddScoped<IValidator<IProductDto>, IProductDtoValidator>();
+builder.Services.AddScoped<IValidator<IShoppinListDto>, ShoppingListDtoValidator>();
+builder.Services.AddScoped<IValidator<SearchDto>, SearchDtoValidator>();
 
 var app = builder.Build();
 

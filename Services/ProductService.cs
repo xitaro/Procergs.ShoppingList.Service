@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Procergs.ShoppingList.Service.Dtos;
+﻿using Procergs.ShoppingList.Service.Dtos;
 using Procergs.ShoppingList.Service.Interfaces;
+using System.Collections.Generic;
 
 namespace Procergs.ShoppingList.Service.Services
 {
@@ -8,21 +8,23 @@ namespace Procergs.ShoppingList.Service.Services
     {
         private readonly IShoppingListService shoppingListService;
 
-        private readonly Guid userID = new Guid("3fa85f64-5717-4562-b3fc-2c963f66afa6");
-
         public ProductService(IShoppingListService shoppingListService)
         {
             this.shoppingListService = shoppingListService;
-            
         }
  
-        public async Task<ProductDto> GetByGtinAsync(string gtin)
+        public async Task<List<ProductDto>> GetProductsFromListAsync(Guid listID, string gtin)
         {
             try
             {
-                var shoppingList = await shoppingListService.GetByUserIDAsync(this.userID);
+                var shoppingList = await shoppingListService.GetByIDAsync(listID);
 
-                return shoppingList.ProductDtos.Find(product => product.Gtin == gtin);
+                if (shoppingList == null)
+                    throw new NullReferenceException("Não encontrou nenhuma lista de compras com esse ID");
+
+                var existingProducts = shoppingList.ProductDtos;
+
+                return existingProducts;
 
             }
             catch (Exception)
@@ -35,14 +37,14 @@ namespace Procergs.ShoppingList.Service.Services
         {
             try
             {
-                ProductDto existingProduct = await GetByGtinAsync(addProductDto.Gtin);
+                List<ProductDto> existingProducts = await GetProductsFromListAsync(addProductDto.ListID, addProductDto.Gtin);
 
-                if (existingProduct != null)
-                    throw new NullReferenceException("Produto já está na lista de compras!");
+                if (existingProducts != null && existingProducts.Count() == 15)
+                    throw new NullReferenceException("Lista de Compras está cheia!");
 
                 ProductDto newProduct = new ProductDto(addProductDto.Gtin, addProductDto.Name, 0);
 
-                await shoppingListService.AddProductAsync(userID, newProduct);
+                await shoppingListService.AddProductAsync(addProductDto.ListID, newProduct);
 
             }
             catch (Exception)
@@ -51,16 +53,16 @@ namespace Procergs.ShoppingList.Service.Services
             }
         }
 
-        public async Task DeleteAsync(string gtinToRemove)
+        public async Task DeleteAsync(RemoveProductDto removeProductDto)
         {
             try
             {
-                ProductDto existingProduct = await GetByGtinAsync(gtinToRemove);
+                List<ProductDto> existingProducts = await GetProductsFromListAsync(removeProductDto.ListID, removeProductDto.Gtin);
 
-                if (existingProduct == null)
-                    throw new NullReferenceException("Produto não existe na lista de compras!");
+                if (existingProducts == null)
+                    throw new NullReferenceException("Esta lista de compras não existe!");
 
-                await shoppingListService.RemoveProductAsync(userID, gtinToRemove); 
+                await shoppingListService.RemoveProductAsync(removeProductDto.ListID, removeProductDto.Gtin); 
             }
             catch (Exception)
             {

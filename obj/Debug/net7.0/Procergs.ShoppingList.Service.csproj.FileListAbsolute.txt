@@ -90,3 +90,7 @@ C:\Users\Marco\source\repos\xitaro\Procergs.ShoppingList.Service\obj\Debug\net7.
 C:\Users\Marco\source\repos\xitaro\Procergs.ShoppingList.Service\obj\Debug\net7.0\Procergs.ShoppingList.Service.pdb
 C:\Users\Marco\source\repos\xitaro\Procergs.ShoppingList.Service\obj\Debug\net7.0\Procergs.ShoppingList.Service.genruntimeconfig.cache
 C:\Users\Marco\source\repos\xitaro\Procergs.ShoppingList.Service\obj\Debug\net7.0\ref\Procergs.ShoppingList.Service.dll
+C:\Users\Marco\source\repos\xitaro\Procergs.ShoppingList.Service\bin\Debug\net7.0\Elasticsearch.Net.dll
+C:\Users\Marco\source\repos\xitaro\Procergs.ShoppingList.Service\bin\Debug\net7.0\Nest.dll
+C:\Users\Marco\source\repos\xitaro\Procergs.ShoppingList.Service\bin\Debug\net7.0\System.Device.Portable.dll
+C:\Users\Marco\source\repos\xitaro\Procergs.ShoppingList.Service\bin\Debug\net7.0\FluentValidation.dll

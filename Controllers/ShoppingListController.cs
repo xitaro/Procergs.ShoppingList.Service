@@ -1,8 +1,8 @@
-﻿
+﻿using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Procergs.ShoppingList.Service.Dtos;
 using Procergs.ShoppingList.Service.Interfaces;
-using Procergs.ShoppingList.Service.Repositories;
 
 namespace Procergs.ShoppingList.Service.Controllers
 {
@@ -10,17 +10,31 @@ namespace Procergs.ShoppingList.Service.Controllers
     [Route("[controller]")]
     public class ShoppingListController : ControllerBase
     {
-        private readonly IShoppingListService _shoppingListService;
+        private readonly IShoppingListService shoppingListService;
+        private readonly IValidator<SearchDto> searchValidator;
+        private readonly IValidator<IShoppinListDto> shoppingListValidator;
 
-        public ShoppingListController(IShoppingListService shoppingListService)
+        public ShoppingListController(IShoppingListService shoppingListService,
+            IValidator<SearchDto> searchValidator,
+            IValidator<IShoppinListDto> shoppingListValidator)
         {
-            _shoppingListService = shoppingListService;
-        }  
+            this.shoppingListService = shoppingListService;
+            this.searchValidator = searchValidator;
+            this.shoppingListValidator = shoppingListValidator;
+        }
 
-        [HttpGet("{userId}")]
-        public async Task<ActionResult<ShoppingListDto>> GetByUserIDAsync(Guid userId)
+        [HttpGet("ByUser/{userID}")]
+        public async Task<ActionResult<IEnumerable<ShoppingListDto>>> GetAllByUserAsync(Guid userID)
         {
-            var shoppingListDto = await _shoppingListService.GetByUserIDAsync(userId);
+            var shoppingListsDto = await shoppingListService.GetAllByUserAsync(userID);
+
+            return Ok(shoppingListsDto);
+        }
+
+        [HttpGet("{listID}")]
+        public async Task<ActionResult<ShoppingListDto>> GetByIDAsync(Guid listID)
+        {
+            var shoppingListDto = await shoppingListService.GetByIDAsync(listID);
 
             return Ok(shoppingListDto);
         }
@@ -28,17 +42,49 @@ namespace Procergs.ShoppingList.Service.Controllers
         [HttpPost]
         public async Task<ActionResult<ShoppingListDto>> CreateAsync(CreateShoppingListDto createShoppingListDto)
         {
-            var createdShoppingListDto = await _shoppingListService.CreateAsync(createShoppingListDto);
+            ValidationResult validationResult = await shoppingListValidator.ValidateAsync(createShoppingListDto);
 
-            return CreatedAtAction(nameof(GetByUserIDAsync), new {userID = createdShoppingListDto.UserID}, createdShoppingListDto);
+            if (!validationResult.IsValid)
+            {
+                ValidationProblemDetails problemDetails = new ValidationProblemDetails(validationResult.ToDictionary());
+                return BadRequest(problemDetails);
+            }
+
+            var createdShoppingListDto = await shoppingListService.CreateAsync(createShoppingListDto);
+
+            return CreatedAtAction(nameof(GetByIDAsync), new { listID = createdShoppingListDto.Id}, createdShoppingListDto);
         }
 
         [HttpPut]
-        public async Task<ActionResult> UpdateAsync(UpdateShoppingListDto updateShoppingListDto)
+        public async Task<ActionResult> UpdateAsync(Guid listID, UpdateShoppingListDto updateShoppingListDto)
         {
-            await _shoppingListService.UpdateAsync(updateShoppingListDto);
+            ValidationResult validationResult = await shoppingListValidator.ValidateAsync(updateShoppingListDto);
+
+            if (!validationResult.IsValid)
+            {
+                ValidationProblemDetails problemDetails = new ValidationProblemDetails(validationResult.ToDictionary());
+                return BadRequest(problemDetails);
+            }
+
+            await shoppingListService.UpdateAsync(listID, updateShoppingListDto);
 
             return NoContent();
+        }
+
+        [HttpPost("/elastic")]
+        public async Task<ActionResult<IGrouping<long, ElasticDto>>> FindBestBuyPlace(SearchDto pesquisaDto)
+        {
+            ValidationResult validationResult = await searchValidator.ValidateAsync(pesquisaDto);
+
+            if (!validationResult.IsValid)
+            {
+                var problemDetails = new ValidationProblemDetails(validationResult.ToDictionary());
+                return BadRequest(problemDetails);
+            }
+
+            var bestPlaceDto = await shoppingListService.FindBestBuyPlace(pesquisaDto);
+           
+            return Ok(bestPlaceDto);
         }
     }
 }
