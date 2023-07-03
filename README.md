@@ -1,7 +1,7 @@
 # ShoppingList.Service
 Documentação do projeto final da disciplina Projeto de Desenvolvimento II do Curso Superior de Tecnologia em Análise e Desenvolvimento de Sistemas do Centro Universitário Senac-RS
 
-# [CanvasMvp](https://www.figma.com/file/kPfuXjimdQha5zxWrzBqIv/Canvas-Mvp?node-id=5%3A18&t=XoKsbfelLq6OGdD0-1)
+# [CanvasMvp](https://www.figma.com/file/kPfuXjimdQha5zxWrzBqIv/Projeto-de-Desenvolvimento-2---Lista-de-Compras?type=design&node-id=0%3A1&mode=design&t=fX1tUFf4S0NtZbgp-1)
 
 # [Mind Map](https://miro.com/app/board/uXjVMKW8Y6E=/?share_link_id=60539723695)
 
