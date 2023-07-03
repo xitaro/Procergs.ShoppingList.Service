@@ -7,6 +7,6 @@ Documentação do projeto final da disciplina Projeto de Desenvolvimento II do C
 
 # [Planejamento](https://docs.google.com/document/d/1vVYzE3TfOUpYHfuHwt_mCw4-OmINHQnRF_0y-jLCqk8/edit?usp=sharing)
 
-# [Fluxo de telas] (https://www.figma.com/proto/kPfuXjimdQha5zxWrzBqIv/Projeto-de-Desenvolvimento-2---Lista-de-Compras?type=design&node-id=229-1174&t=Caei792brgZcxj1n-1&scaling=scale-down&page-id=30%3A172&starting-point-node-id=229%3A616&mode=design)
+# [Fluxo de telas](https://www.figma.com/proto/kPfuXjimdQha5zxWrzBqIv/Projeto-de-Desenvolvimento-2---Lista-de-Compras?type=design&node-id=229-1174&t=Caei792brgZcxj1n-1&scaling=scale-down&page-id=30%3A172&starting-point-node-id=229%3A616&mode=design)
 
 # [Interface](https://github.com/henriquerc18/Procergs_Shopping_List_Interface)
