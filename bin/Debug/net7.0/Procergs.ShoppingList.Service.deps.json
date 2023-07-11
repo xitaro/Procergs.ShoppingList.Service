@@ -13,8 +13,7 @@
           "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": "1.17.2",
           "MongoDB.Driver": "2.19.1",
           "NEST": "7.16.0",
-          "Swashbuckle.AspNetCore": "6.4.0",
-          "System.Device.Location.Portable": "1.0.0"
+          "Swashbuckle.AspNetCore": "6.4.0"
         },
         "runtime": {
           "Procergs.ShoppingList.Service.dll": {}
@@ -236,14 +235,6 @@
         }
       },
       "System.Buffers/4.5.1": {},
-      "System.Device.Location.Portable/1.0.0": {
-        "runtime": {
-          "lib/System.Device.Portable.dll": {
-            "assemblyVersion": "1.0.0.0",
-            "fileVersion": "1.0.0.0"
-          }
-        }
-      },
       "System.Diagnostics.DiagnosticSource/5.0.0": {},
       "System.Runtime.CompilerServices.Unsafe/5.0.0": {},
       "System.Security.AccessControl/5.0.0": {
@@ -443,13 +434,6 @@
       "sha512": "sha512-Rw7ijyl1qqRS0YQD/WycNst8hUUMgrMH4FCn1nNm27M4VxchZ1js3fVjQaANHO5f3sN4isvP4a+Met9Y4YomAg==",
       "path": "system.buffers/4.5.1",
       "hashPath": "system.buffers.4.5.1.nupkg.sha512"
-    },
-    "System.Device.Location.Portable/1.0.0": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-VttxozXEleYcK2NiMo7xKMhDCCJbKtjnxcWDmqu703DeceLTI/9jopfEblyZKL0DWHGyOYLEan06yk6Hcv2cXw==",
-      "path": "system.device.location.portable/1.0.0",
-      "hashPath": "system.device.location.portable.1.0.0.nupkg.sha512"
     },
     "System.Diagnostics.DiagnosticSource/5.0.0": {
       "type": "package",

@@ -39,8 +39,13 @@ namespace Procergs.ShoppingList.Service.Services
             {
                 List<ProductDto> existingProducts = await GetProductsFromListAsync(addProductDto.ListID, addProductDto.Gtin);
 
-                if (existingProducts != null && existingProducts.Count() == 15)
+                if (existingProducts != null && existingProducts.Count() == 30)
                     throw new NullReferenceException("Lista de Compras está cheia!");
+
+                var existingProduct = existingProducts.FirstOrDefault(product => product.Gtin == addProductDto.Gtin);
+
+                if (existingProduct != null)
+                    throw new Exception("Esse produto já está cadastrado nessa lista!");
 
                 ProductDto newProduct = new ProductDto(addProductDto.Gtin, addProductDto.Name, 0);
 

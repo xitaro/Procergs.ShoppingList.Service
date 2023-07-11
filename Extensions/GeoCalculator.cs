@@ -1,6 +1,4 @@
-﻿using System.Device.Location;
-
-namespace Procergs.ShoppingList.Service.Extensions
+﻿namespace Procergs.ShoppingList.Service.Extensions
 {
     public class GeoCalculator
     {

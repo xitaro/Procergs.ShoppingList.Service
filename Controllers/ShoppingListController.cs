@@ -23,10 +23,10 @@ namespace Procergs.ShoppingList.Service.Controllers
             this.shoppingListValidator = shoppingListValidator;
         }
 
-        [HttpGet("ByUser/{userID}")]
-        public async Task<ActionResult<IEnumerable<ShoppingListDto>>> GetAllByUserAsync(Guid userID)
+        [HttpGet("AllByUser/{userCpf}")]
+        public async Task<ActionResult<IEnumerable<ShoppingListDto>>> GetAllByUserAsync(string userCpf)
         {
-            var shoppingListsDto = await shoppingListService.GetAllByUserAsync(userID);
+            var shoppingListsDto = await shoppingListService.GetAllByUserAsync(userCpf);
 
             return Ok(shoppingListsDto);
         }
@@ -56,7 +56,7 @@ namespace Procergs.ShoppingList.Service.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult> UpdateAsync(Guid listID, UpdateShoppingListDto updateShoppingListDto)
+        public async Task<ActionResult> UpdateAsync(UpdateShoppingListDto updateShoppingListDto)
         {
             ValidationResult validationResult = await shoppingListValidator.ValidateAsync(updateShoppingListDto);
 
@@ -66,13 +66,13 @@ namespace Procergs.ShoppingList.Service.Controllers
                 return BadRequest(problemDetails);
             }
 
-            await shoppingListService.UpdateAsync(listID, updateShoppingListDto);
+            await shoppingListService.UpdateAsync(updateShoppingListDto);
 
             return NoContent();
         }
 
         [HttpPost("/elastic")]
-        public async Task<ActionResult<IGrouping<long, ElasticDto>>> FindBestBuyPlace(SearchDto pesquisaDto)
+        public async Task<ActionResult<BestPlaceDto>> FindBestBuyPlace(SearchDto pesquisaDto)
         {
             ValidationResult validationResult = await searchValidator.ValidateAsync(pesquisaDto);
 

@@ -6,7 +6,7 @@ namespace Procergs.ShoppingList.Service.Extensions
     {
         public static ShoppingListDto AsDto(this Entities.ShoppingList shoppingList)
         {
-            return new ShoppingListDto(shoppingList.Id, shoppingList.UserID, shoppingList.Name, shoppingList.Products);
+            return new ShoppingListDto(shoppingList.Id, shoppingList.UserCpf, shoppingList.Name, shoppingList.Products);
         }
 
         public static BestPlaceProductDto AsDto(this ElasticDto elasticProductDto)

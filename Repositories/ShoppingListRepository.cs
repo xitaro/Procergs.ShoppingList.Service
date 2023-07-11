@@ -1,4 +1,5 @@
 ﻿using MongoDB.Driver;
+using Nest;
 
 namespace Procergs.ShoppingList.Service.Repositories
 {
@@ -13,16 +14,16 @@ namespace Procergs.ShoppingList.Service.Repositories
             dbCollection = database.GetCollection<Entities.ShoppingList>(collectionName);
         }
 
-        public async Task<IReadOnlyCollection<Entities.ShoppingList>> GetAllByUserAsync(Guid userID)
+        public async Task<IReadOnlyCollection<Entities.ShoppingList>> GetAllByUserAsync(string userCpf)
         {
-            FilterDefinition<Entities.ShoppingList> filter = filterDefinitionBuilder.Eq(entity => entity.UserID, userID);
+            FilterDefinition<Entities.ShoppingList> filter = filterDefinitionBuilder.Eq(entity => entity.UserCpf, userCpf);
             return await dbCollection.Find(filter).ToListAsync();
         }
 
         public async Task<Entities.ShoppingList> GetByIDAsync(Guid id)
         {
             FilterDefinition<Entities.ShoppingList> filter = filterDefinitionBuilder.Eq(entity => entity.Id, id);
-            return await dbCollection.Find(filterDefinitionBuilder.Empty).FirstOrDefaultAsync();
+            return await dbCollection.Find(filter).FirstOrDefaultAsync();
         }
 
         public async Task CreateAsync(Entities.ShoppingList entity)

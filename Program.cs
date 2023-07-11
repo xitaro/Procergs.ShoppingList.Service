@@ -13,9 +13,11 @@ using Procergs.ShoppingList.Service.Repositories;
 using Procergs.ShoppingList.Service.Services;
 using System;
 
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddCors();
 
 builder.Services.AddControllers(options =>
 {
@@ -59,6 +61,11 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+
+    app.UseCors(option => option.AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader()
+        );
 }
 
 app.UseHttpsRedirection();

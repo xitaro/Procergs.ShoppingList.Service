@@ -384,15 +384,6 @@
           "lib/netcoreapp2.0/_._": {}
         }
       },
-      "System.Device.Location.Portable/1.0.0": {
-        "type": "package",
-        "compile": {
-          "lib/System.Device.Portable.dll": {}
-        },
-        "runtime": {
-          "lib/System.Device.Portable.dll": {}
-        }
-      },
       "System.Diagnostics.DiagnosticSource/5.0.0": {
         "type": "package",
         "compile": {
@@ -1339,18 +1330,6 @@
         "version.txt"
       ]
     },
-    "System.Device.Location.Portable/1.0.0": {
-      "sha512": "VttxozXEleYcK2NiMo7xKMhDCCJbKtjnxcWDmqu703DeceLTI/9jopfEblyZKL0DWHGyOYLEan06yk6Hcv2cXw==",
-      "type": "package",
-      "path": "system.device.location.portable/1.0.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "lib/System.Device.Portable.dll",
-        "system.device.location.portable.1.0.0.nupkg.sha512",
-        "system.device.location.portable.nuspec"
-      ]
-    },
     "System.Diagnostics.DiagnosticSource/5.0.0": {
       "sha512": "tCQTzPsGZh/A9LhhA6zrqCRV4hOHsK90/G7q3Khxmn6tnB1PuNU0cRaKANP2AWcF9bn0zsuOoZOSrHuJk6oNBA==",
       "type": "package",
@@ -1538,8 +1517,7 @@
       "Microsoft.VisualStudio.Azure.Containers.Tools.Targets >= 1.17.2",
       "MongoDB.Driver >= 2.19.1",
       "NEST >= 7.16.0",
-      "Swashbuckle.AspNetCore >= 6.4.0",
-      "System.Device.Location.Portable >= 1.0.0"
+      "Swashbuckle.AspNetCore >= 6.4.0"
     ]
   },
   "packageFolders": {
@@ -1604,10 +1582,6 @@
           "Swashbuckle.AspNetCore": {
             "target": "Package",
             "version": "[6.4.0, )"
-          },
-          "System.Device.Location.Portable": {
-            "target": "Package",
-            "version": "[1.0.0, )"
           }
         },
         "imports": [
@@ -1632,17 +1606,5 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.203\\RuntimeIdentifierGraph.json"
       }
     }
-  },
-  "logs": [
-    {
-      "code": "NU1701",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "O pacote 'System.Device.Location.Portable 1.0.0' foi restaurado usando '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' em vez da estrutura de destino do projeto 'net7.0'. Esse pacote pode não ser totalmente compatível com o seu projeto.",
-      "libraryId": "System.Device.Location.Portable",
-      "targetGraphs": [
-        "net7.0"
-      ]
-    }
-  ]
+  }
 }

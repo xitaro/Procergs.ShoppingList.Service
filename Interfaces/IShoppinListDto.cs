@@ -2,7 +2,6 @@
 {
     public interface IShoppinListDto
     {
-        Guid UserID { get; }
         string Name { get; }
     }
 }

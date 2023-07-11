@@ -11,20 +11,18 @@ namespace Procergs.ShoppingList.Service.Services
         private readonly IShoppingListRepository shoppingListRepository;
         private readonly IElasticClient elasticClient;
 
-        private IEnumerable<IGrouping<long, ElasticDto>> bestPlacesByPrice;
-
         public ShoppingListService(IShoppingListRepository shoppingListRepository, IElasticClient elasticClient) 
         {
             this.shoppingListRepository = shoppingListRepository;
             this.elasticClient = elasticClient;
         }
 
-        public async Task<IEnumerable<ShoppingListDto>> GetAllByUserAsync(Guid userID)
+        public async Task<IEnumerable<ShoppingListDto>> GetAllByUserAsync(string userCpf)
         {
 
             try
             {
-                var shoppingLists = await shoppingListRepository.GetAllByUserAsync(userID);
+                var shoppingLists = await shoppingListRepository.GetAllByUserAsync(userCpf);
 
                 if (shoppingLists == null)
                     throw new NullReferenceException("Não encontrou nenhuma lista de compras para este usuario.");
@@ -38,11 +36,11 @@ namespace Procergs.ShoppingList.Service.Services
             }
         }
 
-        public async Task<ShoppingListDto> GetByIDAsync(Guid userId)
+        public async Task<ShoppingListDto> GetByIDAsync(Guid id)
         {
             try
             {
-                var shoppingList = await shoppingListRepository.GetByIDAsync(userId);
+                var shoppingList = await shoppingListRepository.GetByIDAsync(id);
 
                 if (shoppingList == null)
                     throw new NullReferenceException("Não encontrou nenhuma lista de compras com esse ID");
@@ -59,14 +57,14 @@ namespace Procergs.ShoppingList.Service.Services
         {
             try
             {
-                var existingShoppingLists = await shoppingListRepository.GetAllByUserAsync(createShoppingListDto.UserID);
+                var existingShoppingLists = await shoppingListRepository.GetAllByUserAsync(createShoppingListDto.UserCpf);
 
                 if(existingShoppingLists != null && existingShoppingLists.Count() == 5)
                     throw new Exception("Usuário já tem número máximo de listas cadastradas.");
 
                 var shoppingList = new Entities.ShoppingList
                 {
-                    UserID = createShoppingListDto.UserID,
+                    UserCpf = createShoppingListDto.UserCpf,
                     Name = createShoppingListDto.Name,
                     Products = new List<ProductDto>()
                 };
@@ -82,19 +80,14 @@ namespace Procergs.ShoppingList.Service.Services
             }            
         }
         
-        public async Task UpdateAsync(Guid listID, UpdateShoppingListDto updateShoppingListDto)
+        public async Task UpdateAsync(UpdateShoppingListDto updateShoppingListDto)
         {
             try
             {
-                var userShoppingLists = await shoppingListRepository.GetAllByUserAsync(updateShoppingListDto.UserID);
-
-                if (userShoppingLists == null)
-                    throw new NullReferenceException("Não encontrou nenhuma lista de compras para este usuário.");
-
-                var existingShoppingList = userShoppingLists.FirstOrDefault(shoppingList => shoppingList.Id ==  listID);
+                var existingShoppingList = await shoppingListRepository.GetByIDAsync(updateShoppingListDto.Id);
 
                 if (existingShoppingList == null)
-                    throw new NullReferenceException("Não encontrou nenhuma lista de compras com esse ID.");
+                    throw new NullReferenceException("Não encontrou nenhuma lista de compras com esse Id.");
 
                 existingShoppingList.Name = updateShoppingListDto.Name;
 
@@ -134,7 +127,7 @@ namespace Procergs.ShoppingList.Service.Services
                 if (existingShoppingList == null)
                     throw new NullReferenceException("Não encontrou nenhuma lista de compras para este usuário.");
 
-                existingShoppingList.Products.Remove( existingShoppingList.Products.Single(product => product.Gtin == gtinToRemove));
+                existingShoppingList.Products.Remove(existingShoppingList.Products.FirstOrDefault(product => product.Gtin == gtinToRemove));
 
                 await shoppingListRepository.UpdateAsync(existingShoppingList);
             }
@@ -147,7 +140,7 @@ namespace Procergs.ShoppingList.Service.Services
         public async Task<BestPlaceDto> FindBestBuyPlace(SearchDto pesquisaDto)
         {
             List<ElasticDto> elasticProductsDto = new List<ElasticDto>();
-            IEnumerable<IGrouping<long, ElasticDto>> GroupedProducts;
+            IEnumerable<IGrouping<long, ElasticDto>> groupedProducts;
             IOrderedEnumerable<IGrouping<long, ElasticDto>> orderedGroups;
             int highScore;
 
@@ -172,18 +165,18 @@ namespace Procergs.ShoppingList.Service.Services
                 }
 
                 // Grouped by Cnpj
-                GroupedProducts = elasticProductsDto.GroupBy(product => product.Estabelecimento.CodCnpjEstab);
+                groupedProducts = elasticProductsDto.GroupBy(product => product.Estabelecimento.CodCnpjEstab);
 
                 // Verificar qual grupo tem mais elementos // Ordena pelo Count
-                orderedGroups = GroupedProducts.OrderByDescending(group => group.Count());
+                orderedGroups = groupedProducts.OrderByDescending(group => group.Count());
 
                 highScore = orderedGroups.Max(group => group.Count());
 
                 // Pega apenas grupos com a maior quantidade de elementos
-                GroupedProducts = orderedGroups.TakeWhile(group => group.Count() == highScore);
+                groupedProducts = orderedGroups.TakeWhile(group => group.Count() == highScore);
 
                 // Ordena por menor valor e por menor distância
-                orderedGroups = GroupedProducts.OrderBy(group => group.Sum(product => product.VlrItem)).ThenByDescending(g => g.FirstOrDefault().Estabelecimento.KmDistancia);
+                orderedGroups = groupedProducts.OrderBy(group => group.Sum(product => product.VlrItem)).ThenByDescending(g => g.FirstOrDefault().Estabelecimento.KmDistancia);
 
                 // Pega o primeiro grupo de produtos da lista
                 var products = orderedGroups.FirstOrDefault();
@@ -211,7 +204,6 @@ namespace Procergs.ShoppingList.Service.Services
             }
             catch (Exception)
             {
-
                 throw;
             }
         }
@@ -271,14 +263,13 @@ namespace Procergs.ShoppingList.Service.Services
             }
 
             // Prepara as lambdas
-            Func<ElasticDto, Object> campoOrdemPrincipal = null;
-            Func<ElasticDto, Object> campoOrdemComplementar = null;
+            Func<ElasticDto, Object> campoOrdemPrincipal;
+            Func<ElasticDto, Object> campoOrdemComplementar;
 
             campoOrdemPrincipal = f => f.VlrItem;
             campoOrdemComplementar = f => f.Estabelecimento.KmDistancia;
 
-
-            IEnumerable<ElasticDto> itens = null;
+            IEnumerable<ElasticDto> itens;
 
             // Ordena todos produtos retornados por Preço e Distância
             itens = SearchResponse.Documents.OrderByDescending(campoOrdemPrincipal).ThenBy(campoOrdemComplementar);
